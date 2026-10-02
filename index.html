@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Test très sérieux 🤨</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(135deg,
+                    #ff7eb3,
+                    #8e44ad,
+                    #3498db);
+
+            background-size: 400% 400%;
+            animation: fondAnime 10s ease infinite;
+
+            color: white;
+            overflow: hidden;
+        }
+
+        @keyframes fondAnime {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            padding: 30px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.20);
+            backdrop-filter: blur(15px);
+
+            border: 2px solid rgba(255, 255, 255, 0.35);
+
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.20);
+
+            animation: apparition 1s ease;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 15px 0;
+        }
+
+        button {
+            border: none;
+            padding: 15px 25px;
+            margin: 10px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #start {
+            background: white;
+            color: #111;
+        }
+
+        #start:hover {
+            transform: scale(1.08);
+        }
+
+        .choice {
+            background: white;
+            color: #222;
+            width: 80%;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .choice:hover {
+            transform: scale(1.05);
+            background: #f2f2f2;
+        }
+
+        .choice:hover {
+            transform: translateX(5px);
+            background: #444;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #loading {
+            font-size: 20px;
+        }
+
+        .bar {
+            width: 100%;
+            height: 15px;
+            background: #333;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: white;
+            transition: width 2.5s linear;
+        }
+
+        .result {
+            animation: bizarre 0.8s ease;
+        }
+
+        .emoji {
+            font-size: 70px;
+            animation: bounce 1s infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes apparition {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes bizarre {
+            0% {
+                transform: scale(0.3) rotate(-10deg);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.1) rotate(5deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="app">
+
+        <!-- PAGE 1 -->
+        <div id="intro">
+
+            <div class="emoji">🤨</div>
+
+            <h1>Test très sérieux</h1>
+
+            <p>
+                Nous allons déterminer si tu es<br>
+                une personne normale.
+            </p>
+
+            <button id="start" onclick="commencer()">
+                COMMENCER
+            </button>
+
+        </div>
+
+
+        <!-- QUESTION -->
+        <div id="question" class="hidden">
+
+            <h1 id="questionTitle">Question 1/3</h1>
+
+            <p id="questionText">
+                Tu as déjà ouvert le frigo sans savoir pourquoi ?
+            </p>
+
+            <button class="choice" onclick="repondre()">
+                Oui 😭
+            </button>
+
+            <button class="choice" onclick="repondre()">
+                Non 😇
+            </button>
+
+        </div>
+
+
+        <!-- CHARGEMENT -->
+        <div id="loading" class="hidden">
+
+            <div class="emoji">🧠</div>
+
+            <h1>Analyse en cours...</h1>
+
+            <p id="loadingText">
+                Nous examinons ton niveau de normalité.
+            </p>
+
+            <div class="bar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+        </div>
+
+
+        <!-- RESULTAT -->
+        <div id="result" class="hidden result">
+
+            <div class="emoji">🤡</div>
+
+            <h1>Résultat obtenu !</h1>
+
+            <p>
+                Félicitations 🎉
+            </p>
+
+            <p>
+                Après une analyse extrêmement sérieuse...
+            </p>
+
+            <h2>
+                TU ES BIZARRE. 🤨
+            </h2>
+
+            <p>
+                Mais rassure-toi...<br>
+                C'est probablement une bonne chose. 😂
+            </p>
+
+            <button id="again" onclick="recommencer()">
+                Refaire le test
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let question = 1;
+
+        function commencer() {
+
+            document.getElementById("intro").classList.add("hidden");
+
+            document.getElementById("question").classList.remove("hidden");
+
+        }
+
+
+        function repondre() {
+
+            const app = document.getElementById("app");
+
+            app.classList.add("shake");
+
+            setTimeout(() => {
+                app.classList.remove("shake");
+            }, 400);
+
+
+            if (question < 3) {
+
+                question++;
+
+                document.getElementById("questionTitle").innerText =
+                    "Question " + question + "/3";
+
+
+                if (question === 2) {
+
+                    document.getElementById("questionText").innerText =
+                        "Tu parles parfois tout seul quand personne n'est là ?";
+
+                }
+
+                if (question === 3) {
+
+                    document.getElementById("questionText").innerText =
+                        "Tu viens de cliquer sur un bouton alors que tu ne savais même pas ce qui allait arriver ?";
+
+                }
+
+            }
+
+            else {
+
+                document.getElementById("question").classList.add("hidden");
+
+                document.getElementById("loading").classList.remove("hidden");
+
+                let progress = document.getElementById("progress");
+
+                setTimeout(() => {
+                    progress.style.width = "100%";
+                }, 100);
+
+                setTimeout(() => {
+
+                    document.getElementById("loading").classList.add("hidden");
+
+                    document.getElementById("result").classList.remove("hidden");
+
+                }, 3000);
+
+            }
+
+        }
+
+
+        function recommencer() {
+
+            question = 1;
+
+            document.getElementById("result").classList.add("hidden");
+
+            document.getElementById("intro").classList.remove("hidden");
+
+            document.getElementById("progress").style.width = "0%";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
